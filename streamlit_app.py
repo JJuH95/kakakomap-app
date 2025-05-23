@@ -19,7 +19,7 @@ if st.button("키워드 추출 시작"):
         st.success("반경 1KM 키워드 수집 완료")
 
     st.subheader("🔍 추출된 키워드 예시")
-    st.markdown("- 지하철역
+    st.markdown("- 지하철역")
 - 병원
 - 카페
 - 학원
