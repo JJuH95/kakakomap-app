@@ -28,4 +28,4 @@ st.download_button("📥 TXT로 저장", "지하철역")
 병원
 카페
 학원
-랜드마크", file_name="keywords.txt")
+st.download_button("📥 TXT로 저장", "지하철역, 병원, 카페, 학원, 랜드마크", file_name="keywords.txt")
