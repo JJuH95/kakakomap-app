@@ -24,7 +24,7 @@ if st.button("키워드 추출 시작"):
 - 카페
 - 학원
 st.markdown("- 랜드마크 등")
-    st.download_button("📥 TXT로 저장", "지하철역")
+st.download_button("📥 TXT로 저장", "지하철역")
 병원
 카페
 학원
