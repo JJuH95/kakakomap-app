@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>우리 매장 주변 카테고리 장소 자동 검색기</title>
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b3aec68754d15e6e3d7a8f7e49246a76&libraries=services"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #map { width: 100%; height: 400px; margin: 20px 0; }
+    input, button { padding: 8px; margin: 10px 0; width: 100%; max-width: 400px; }
+  </style>
+</head>
+<body>
+  <h2>📌 우리 매장 주변 카테고리 장소 자동 검색기</h2>
+  <p>주소 입력 후 반경 1km 내의 장소들을 카테고리별로 자동 검색합니다.</p>
+
+  <input type="text" id="storeAddress" value="서울 성동구 행당동 268">
+  <button onclick="searchCategories()">검색 시작</button>
+
+  <div id="map"></div>
+  <div id="results"></div>
+
+  <script>
+    const map = new kakao.maps.Map(document.getElementById('map'), {
+      center: new kakao.maps.LatLng(37.5665, 126.9780),
+      level: 4
+    });
+
+    const geocoder = new kakao.maps.services.Geocoder();
+    const ps = new kakao.maps.services.Places();
+    const marker = new kakao.maps.Marker();
+    marker.setMap(map);
+
+    const categoryCodes = [
+      { code: "FD6", name: "🍽 음식점" },
+      { code: "CE7", name: "☕ 카페" },
+      { code: "CS2", name: "🏪 편의점" },
+      { code: "HP8", name: "🏥 병원" },
+      { code: "PM9", name: "💊 약국" },
+      { code: "BK9", name: "🏦 은행" },
+      { code: "MT1", name: "🛒 마트" },
+      { code: "OL7", name: "⛽ 주유소" }
+    ];
+
+    function searchCategories() {
+      const address = document.getElementById('storeAddress').value;
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      geocoder.addressSearch(address, function(result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+          const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+          map.setCenter(coords);
+          marker.setPosition(coords);
+
+          categoryCodes.forEach(cat => {
+            ps.categorySearch(cat.code, (data, status) => {
+              if (status === kakao.maps.services.Status.OK) {
+                const section = `<h4>${cat.name}</h4><ul>` +
+                  data.map(place => `<li>${place.place_name} - ${place.road_address_name || place.address_name}</li>`).join('') +
+                  '</ul>';
+                resultsDiv.innerHTML += section;
+              }
+            }, {
+              location: coords,
+              radius: 1000
+            });
+          });
+        } else {
+          alert('주소를 찾을 수 없습니다.');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
